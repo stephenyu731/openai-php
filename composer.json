@@ -1,0 +1,7 @@
+{
+    "name": "stephenyu731/openai-php",
+    "version": "dev-master",
+    "autoload": {
+         "psr-4": { "SH\\OpenAI\\": "src/OpenAI/" }
+    }
+}
