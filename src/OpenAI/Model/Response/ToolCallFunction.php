@@ -5,12 +5,12 @@ namespace SH\OpenAI\Model\Response;
 class ToolCallFunction {
 
     /**
-     * @string 
+     * @var string 
      */
     public $name;
 
     /**
-     * @string 
+     * @var string 
      */
     public $arguments;
     

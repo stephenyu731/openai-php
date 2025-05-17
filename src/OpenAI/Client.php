@@ -73,13 +73,15 @@ class Client
         }
 
         if (isset($responseData['error'])) {
-            // $responseData['error']['message']
             throw new Exception($responseData['error']['message']);
         }
 
         return $responseData;
     }
 
+    /**
+     * @return Completions
+     */
     public function completions($opts = [])
     {
         if (!isset($opts['model'])) {
