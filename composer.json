@@ -1,6 +1,6 @@
 {
     "name": "stephenyu731/openai-php",
-    "version": "dev-master",
+    "description": "PHP HTTP client library for OpenAI",
     "autoload": {
          "psr-4": { "SH\\OpenAI\\": "src/OpenAI/" }
     }
