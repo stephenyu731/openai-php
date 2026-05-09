@@ -1,7 +1,22 @@
 {
     "name": "stephenyu731/openai-php",
     "description": "PHP HTTP client library for OpenAI",
+    "require": {
+        "php": ">=8.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
     "autoload": {
-         "psr-4": { "SH\\OpenAI\\": "src/OpenAI/" }
+        "psr-4": {
+            "SH\\OpenAI\\": "src/OpenAI/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SH\\OpenAI\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
     }
 }

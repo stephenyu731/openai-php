@@ -4,7 +4,7 @@ namespace SH\OpenAI;
 
 use SH\OpenAI\Enum\Role;
 
-class Client
+class Chat
 {
     /**
      * @var Client
@@ -20,22 +20,64 @@ class Client
         $this->client = $client;
     }
 
+    public function setTools($tools)
+    {
+        $this->tools = $tools;
+        return $this;
+    }
+
     public function addMessage($message, $role = Role::USER)
     {
-        array_push($this->messages, [
+        $this->messages[] = [
             'role' => $role,
-            'content' => $message
-        ]);
+            'content' => $message,
+        ];
         $data = [
             'messages' => $this->messages,
-            'tools' => $this->tools,
         ];
+        if ($this->tools) {
+            $data['tools'] = $this->tools;
+        }
         $response = $this->client->completions($data);
 
-        array_push($this->messages, [
-            'role' => Role::SYSTEM,
-            'content' => $response->getAnswerContent()
-        ]);
+        $this->messages[] = [
+            'role' => Role::ASSISTANT,
+            'content' => $response->getAnswerContent(),
+        ];
         return $response;
+    }
+
+    public function addToolCallResult($toolCallId, $result, $toolName = null)
+    {
+        $this->messages[] = [
+            'role' => Role::TOOL,
+            'tool_call_id' => $toolCallId,
+            'name' => $toolName,
+            'content' => $result,
+        ];
+        $data = [
+            'messages' => $this->messages,
+        ];
+        if ($this->tools) {
+            $data['tools'] = $this->tools;
+        }
+        $response = $this->client->completions($data);
+
+        $this->messages[] = [
+            'role' => Role::ASSISTANT,
+            'content' => $response->getAnswerContent(),
+        ];
+        return $response;
+    }
+
+    public function reset()
+    {
+        $this->messages = [];
+        return $this;
+    }
+
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }

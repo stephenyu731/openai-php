@@ -8,4 +8,5 @@ class Role
     const SYSTEM = 'system';
     const ASSISTANT = 'assistant';
     const FUNCTION = 'function';
+    const TOOL = 'tool';
 }
