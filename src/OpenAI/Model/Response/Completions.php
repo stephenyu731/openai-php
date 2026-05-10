@@ -5,6 +5,7 @@ namespace SH\OpenAI\Model\Response;
 class Completions
 {
     public $id;
+    public $provider;
     public $object;
     public $model;
     public $created;
@@ -22,6 +23,7 @@ class Completions
     public function __construct($data = [])
     {
         $this->id = $data['id'] ?? null;
+        $this->provider = $data['provider'] ?? null;
         $this->object = $data['object'] ?? null;
         $this->model = $data['model'] ?? null;
         $this->created = $data['created'] ?? null;
