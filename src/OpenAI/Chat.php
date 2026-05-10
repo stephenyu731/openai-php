@@ -32,19 +32,7 @@ class Chat
             'role' => $role,
             'content' => $message,
         ];
-        $data = [
-            'messages' => $this->messages,
-        ];
-        if ($this->tools) {
-            $data['tools'] = $this->tools;
-        }
-        $response = $this->client->completions($data);
-
-        $this->messages[] = [
-            'role' => Role::ASSISTANT,
-            'content' => $response->getAnswerContent(),
-        ];
-        return $response;
+        return $this->sendAndRecordResponse();
     }
 
     public function addToolCallResult($toolCallId, $result, $toolName = null)
@@ -55,18 +43,38 @@ class Chat
             'name' => $toolName,
             'content' => $result,
         ];
-        $data = [
-            'messages' => $this->messages,
-        ];
+        return $this->sendAndRecordResponse();
+    }
+
+    private function sendAndRecordResponse()
+    {
+        $data = ['messages' => $this->messages];
         if ($this->tools) {
             $data['tools'] = $this->tools;
         }
         $response = $this->client->completions($data);
 
-        $this->messages[] = [
-            'role' => Role::ASSISTANT,
-            'content' => $response->getAnswerContent(),
-        ];
+        $assistantMessage = ['role' => Role::ASSISTANT];
+        $responseMessage = $response->getAnswerMessage();
+        if ($responseMessage && ($response->isToolCalls() || $response->isFunctionCall())) {
+            $assistantMessage['content'] = $responseMessage->content;
+            if (!empty($responseMessage->tool_calls)) {
+                $assistantMessage['tool_calls'] = array_map(function ($tc) {
+                    return [
+                        'id' => $tc->id,
+                        'type' => $tc->type,
+                        'function' => [
+                            'name' => $tc->function->name,
+                            'arguments' => $tc->function->arguments,
+                        ],
+                    ];
+                }, $responseMessage->tool_calls);
+            }
+        } else {
+            $assistantMessage['content'] = $response->getAnswerContent();
+        }
+        $this->messages[] = $assistantMessage;
+
         return $response;
     }
 

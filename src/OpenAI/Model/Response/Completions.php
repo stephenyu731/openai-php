@@ -49,7 +49,7 @@ class Completions
      */
     public function getAnswerMessage()
     {
-        if (empty($this->choices)) {
+        if (empty($this->choices) || !$this->choices[0]->message) {
             return null;
         }
         return $this->choices[0]->message;

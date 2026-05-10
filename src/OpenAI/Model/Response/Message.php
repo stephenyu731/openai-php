@@ -8,8 +8,7 @@ class Message {
     public $refusal;
 
     /**
-     * 
-     * @var ToolCall array
+     * @var ToolCall[]
      */
     public $tool_calls;
 
